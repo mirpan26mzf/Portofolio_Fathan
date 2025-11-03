@@ -226,6 +226,7 @@ main {
   color: #555;
   font-size: 1.1rem;
   line-height: 1.6;
+  text-align : justify;
 }
 .about-friends h3 {
   font-size: 1.3rem;
@@ -238,6 +239,7 @@ main {
   margin-bottom: 2rem;
   font-size: 1rem;
   line-height: 1.5;
+    text-align : justify;
 }
 .social-links a {
   display: inline-flex;
@@ -327,6 +329,7 @@ main {
   }
   .about-text, .about-friends {
     flex: 1 1 100%;
+      text-align : justify;
   }
   .social-links a {
     margin-right: 12px;
