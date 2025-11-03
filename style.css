@@ -840,6 +840,7 @@ main {
   color: #222;
   margin-bottom: 0.7rem;
   letter-spacing: 0.03em;
+      text-align: justify;
 }
 
 .portfolio-desc {
@@ -888,7 +889,6 @@ main {
   }
   .portfolio-content {
     padding: 1.4rem 1.6rem 1.8rem;
-    text-align: justify;
   }
   .btn-outline {
     font-size: 0.9rem;
