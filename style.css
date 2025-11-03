@@ -521,6 +521,7 @@ main {
   font-size: 1.05rem;
   color: #555;
   line-height: 1.6;
+  text-align: justify;
 }
 
 .about-friends h3 {
@@ -535,6 +536,7 @@ main {
   font-size: 1rem;
   margin-bottom: 2.2rem;
   line-height: 1.55;
+    text-align: justify;
 }
 
 /* Social links icon */
