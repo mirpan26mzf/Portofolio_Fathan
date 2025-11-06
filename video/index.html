@@ -78,25 +78,22 @@ const videos = [
 
   renderVideos(videos);
 
-  // ======== POPUP PLAYER ========
+// ======== POPUP PLAYER ========
 const popup = document.getElementById("videoPopup");
 const popupVideo = document.getElementById("popupVideo");
-const closePopup = document.getElementById("closePopup");
+
+let hoverTimeout = null;
 
 function openPopup(url) {
+  if (window.innerWidth < 768) return; // Nonaktifkan di mobile
   popup.classList.add("active");
-  popupVideo.src = url + "?autoplay=1";
+  popupVideo.src = url + "?autoplay=1&mute=1";
 }
 
 function closePopupFn() {
   popup.classList.remove("active");
   popupVideo.src = "";
 }
-
-closePopup.addEventListener("click", closePopupFn);
-popup.addEventListener("click", (e) => {
-  if (e.target === popup) closePopupFn();
-});
 
 // Integrasi dengan card
 function renderVideos(list) {
@@ -112,6 +109,36 @@ function renderVideos(list) {
       <p>${v.desc}</p>
     `;
     card.addEventListener("click", () => openPopup(v.url));
+    container.appendChild(card);
+  });
+}
+
+
+// ======== RENDER VIDEO CARD DENGAN HOVER POPUP ========
+function renderVideos(list) {
+  container.innerHTML = "";
+  list.forEach(v => {
+    const card = document.createElement("div");
+    card.classList.add("video-card");
+    card.innerHTML = `
+      <div class="thumbnail">
+        <iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <h3>${v.title}</h3>
+      <p>${v.desc}</p>
+    `;
+
+        // Hover event untuk desktop
+    card.addEventListener("mouseenter", () => {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = setTimeout(() => openPopup(v.url), 250); // jeda biar smooth
+    });
+
+    card.addEventListener("mouseleave", () => {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = setTimeout(closePopupFn, 150);
+    });
+
     container.appendChild(card);
   });
 }
