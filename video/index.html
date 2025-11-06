@@ -128,7 +128,7 @@ function renderVideos(list) {
       <p>${v.desc}</p>
     `;
 
-        // Hover event untuk desktop
+    // Hover event untuk desktop
     card.addEventListener("mouseenter", () => {
       clearTimeout(hoverTimeout);
       hoverTimeout = setTimeout(() => openPopup(v.url), 250); // jeda biar smooth
