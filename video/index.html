@@ -33,21 +33,21 @@
 
 
   <script>
-  // ======== DATA VIDEO ========
+// ======== DATA VIDEO ========
 const videos = [
   {
     title: "Tutorial HTML Dasar",
-    url: "https://www.youtube.com/embed/bxbAyvT0qcE?si=1JtNHmnv5ChrMrpX",
+    url: "https://www.youtube.com/embed/bxbAyvT0qcE",
     desc: "Belajar dasar-dasar HTML untuk pemula."
   },
   {
     title: "Belajar CSS Modern",
-    url: "https://www.youtube.com/embed/bxbAyvT0qcE?si=1JtNHmnv5ChrMrpX",
+    url: "https://www.youtube.com/embed/yfoY53QXEnI",
     desc: "Gaya modern dengan CSS dan animasi."
   },
   {
     title: "JavaScript Interaktif",
-    url: "https://www.youtube.com/embed/bxbAyvT0qcE?si=1JtNHmnv5ChrMrpX",
+    url: "https://www.youtube.com/embed/W6NZfCO5SIk",
     desc: "Membuat website lebih dinamis dengan JS."
   },
   {
@@ -57,86 +57,50 @@ const videos = [
   }
 ];
 
+// ======== GENERATE VIDEO CARD ========
+const container = document.getElementById("videoContainer");
 
-  // ======== GENERATE VIDEO CARD ========
-  const container = document.getElementById("videoContainer");
+function renderVideos(list) {
+  container.innerHTML = "";
+  list.forEach(v => {
+    const card = document.createElement("div");
+    card.classList.add("video-card");
+    card.dataset.title = v.title;
 
-  function renderVideos(list) {
-    container.innerHTML = "";
-    list.forEach(v => {
-      const card = document.createElement("div");
-      card.classList.add("video-card");
-      card.dataset.title = v.title;
-      card.innerHTML = `
-        <iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>
-        <h3>${v.title}</h3>
-        <p>${v.desc}</p>
+    card.innerHTML = `
+      <img src="https://img.youtube.com/vi/${v.url.split('/embed/')[1]}/hqdefault.jpg" alt="${v.title}">
+      <h3>${v.title}</h3>
+      <p>${v.desc}</p>
+    `;
+
+    // ==== Hover Preview ====
+    let preview;
+    card.addEventListener("mouseenter", (e) => {
+      if (window.innerWidth < 768) return; // Nonaktif di mobile
+
+      // Buat popup kecil
+      preview = document.createElement("div");
+      preview.classList.add("video-preview");
+      preview.innerHTML = `
+        <iframe 
+          src="${v.url}?autoplay=1&mute=1" 
+          frameborder="0" 
+          allow="autoplay; encrypted-media" 
+          allowfullscreen>
+        </iframe>
       `;
-      container.appendChild(card);
-    });
-  }
+      document.body.appendChild(preview);
 
-  renderVideos(videos);
-
-// ======== POPUP PLAYER ========
-const popup = document.getElementById("videoPopup");
-const popupVideo = document.getElementById("popupVideo");
-
-let hoverTimeout = null;
-
-function openPopup(url) {
-  if (window.innerWidth < 768) return; // Nonaktifkan di mobile
-  popup.classList.add("active");
-  popupVideo.src = url + "?autoplay=1&mute=1";
-}
-
-function closePopupFn() {
-  popup.classList.remove("active");
-  popupVideo.src = "";
-}
-
-// Integrasi dengan card
-function renderVideos(list) {
-  container.innerHTML = "";
-  list.forEach(v => {
-    const card = document.createElement("div");
-    card.classList.add("video-card");
-    card.innerHTML = `
-      <div class="thumbnail">
-        <iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>
-      </div>
-      <h3>${v.title}</h3>
-      <p>${v.desc}</p>
-    `;
-    card.addEventListener("click", () => openPopup(v.url));
-    container.appendChild(card);
-  });
-}
-
-
-// ======== RENDER VIDEO CARD DENGAN HOVER POPUP ========
-function renderVideos(list) {
-  container.innerHTML = "";
-  list.forEach(v => {
-    const card = document.createElement("div");
-    card.classList.add("video-card");
-    card.innerHTML = `
-      <div class="thumbnail">
-        <iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>
-      </div>
-      <h3>${v.title}</h3>
-      <p>${v.desc}</p>
-    `;
-
-        // Hover event untuk desktop
-    card.addEventListener("mouseenter", () => {
-      clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(() => openPopup(v.url), 250); // jeda biar smooth
+      // Posisi popup di atas card
+      const rect = card.getBoundingClientRect();
+      preview.style.left = rect.left + "px";
+      preview.style.top = (rect.top - 200) + "px"; // muncul di atas card
     });
 
     card.addEventListener("mouseleave", () => {
-      clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(closePopupFn, 150);
+      if (preview) {
+        preview.remove();
+      }
     });
 
     container.appendChild(card);
@@ -145,34 +109,32 @@ function renderVideos(list) {
 
 renderVideos(videos);
 
+// ======== MODE GELAP-TERANG ========
+const modeToggle = document.getElementById("modeToggle");
+const body = document.body;
+const lightIcon = document.getElementById("lightIcon");
+const darkIcon = document.getElementById("darkIcon");
 
-  // ======== MODE GELAP-TERANG ========
-  const modeToggle = document.getElementById("modeToggle");
-  const body = document.body;
-  const lightIcon = document.getElementById("lightIcon");
-  const darkIcon = document.getElementById("darkIcon");
+modeToggle.addEventListener("click", () => {
+  body.classList.toggle("dark");
+  const darkMode = body.classList.contains("dark");
+  darkIcon.style.display = darkMode ? "none" : "inline";
+  lightIcon.style.display = darkMode ? "inline" : "none";
+});
 
-  modeToggle.addEventListener("click", () => {
-    body.classList.toggle("dark");
-    const darkMode = body.classList.contains("dark");
-    darkIcon.style.display = darkMode ? "none" : "inline";
-    lightIcon.style.display = darkMode ? "inline" : "none";
-  });
+// ======== PENCARIAN VIDEO ========
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
 
-  // ======== PENCARIAN VIDEO ========
-  const searchInput = document.getElementById("searchInput");
-  const searchBtn = document.getElementById("searchBtn");
+function searchVideo() {
+  const filter = searchInput.value.toLowerCase();
+  const filtered = videos.filter(v => v.title.toLowerCase().includes(filter));
+  renderVideos(filtered);
+}
 
-  function searchVideo() {
-    const filter = searchInput.value.toLowerCase();
-    const filtered = videos.filter(v => v.title.toLowerCase().includes(filter));
-    renderVideos(filtered);
-  }
+searchBtn.addEventListener("click", searchVideo);
+searchInput.addEventListener("keyup", searchVideo);
+</script>
 
-  searchBtn.addEventListener("click", searchVideo);
-  searchInput.addEventListener("keyup", searchVideo);
-
-
-  </script>
 </body>
 </html>

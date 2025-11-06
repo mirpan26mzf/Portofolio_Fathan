@@ -270,7 +270,7 @@ body.dark .search-box input {
 }
 
 .video-popup iframe {
-  width: 80%;
+  width: 50%;
   max-width: 900px;
   height: 500px;
   border-radius: 10px;
