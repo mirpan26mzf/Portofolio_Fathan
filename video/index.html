@@ -32,7 +32,7 @@
 </div>
 
 
-  <script>
+<script>
 // ======== DATA VIDEO ========
 const videos = [
   {
@@ -67,39 +67,48 @@ function renderVideos(list) {
     card.classList.add("video-card");
     card.dataset.title = v.title;
 
+    // Gambar thumbnail YouTube otomatis
+    const videoId = v.url.split("/embed/")[1];
+    const thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
     card.innerHTML = `
-      <img src="https://img.youtube.com/vi/${v.url.split('/embed/')[1]}/hqdefault.jpg" alt="${v.title}">
+      <img src="${thumbnail}" alt="${v.title}">
       <h3>${v.title}</h3>
       <p>${v.desc}</p>
     `;
 
-    // ==== Hover Preview ====
+    // ===== Hover Preview =====
     let preview;
-    card.addEventListener("mouseenter", (e) => {
-      if (window.innerWidth < 768) return; // Nonaktif di mobile
+    let timer;
 
-      // Buat popup kecil
-      preview = document.createElement("div");
-      preview.classList.add("video-preview");
-      preview.innerHTML = `
-        <iframe 
-          src="${v.url}?autoplay=1&mute=1" 
-          frameborder="0" 
-          allow="autoplay; encrypted-media" 
-          allowfullscreen>
-        </iframe>
-      `;
-      document.body.appendChild(preview);
+    card.addEventListener("mouseenter", () => {
+      if (window.innerWidth < 768) return; // nonaktif di mobile
 
-      // Posisi popup di atas card
-      const rect = card.getBoundingClientRect();
-      preview.style.left = rect.left + "px";
-      preview.style.top = (rect.top - 200) + "px"; // muncul di atas card
+      timer = setTimeout(() => {
+        preview = document.createElement("div");
+        preview.classList.add("video-preview");
+        preview.innerHTML = `
+          <iframe
+            src="${v.url}?autoplay=1&mute=1"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+          </iframe>
+        `;
+        document.body.appendChild(preview);
+
+        // Posisi popup muncul di atas card
+        const rect = card.getBoundingClientRect();
+        preview.style.left = rect.left + "px";
+        preview.style.top = (rect.top - 200) + "px";
+      }, 1000); // delay 1 detik
     });
 
     card.addEventListener("mouseleave", () => {
+      clearTimeout(timer);
       if (preview) {
-        preview.remove();
+        preview.classList.add("fade-out");
+        setTimeout(() => preview.remove(), 300);
       }
     });
 
@@ -135,6 +144,7 @@ function searchVideo() {
 searchBtn.addEventListener("click", searchVideo);
 searchInput.addEventListener("keyup", searchVideo);
 </script>
+
 
 </body>
 </html>
