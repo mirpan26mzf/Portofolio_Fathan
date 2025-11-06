@@ -1,479 +1,239 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Blog Kamu — Template Modern</title>
-  <meta name="description" content="Template blog modern, ringan, responsif dengan dark mode, pencarian, kategori, dan tampilan artikel satu file." />
-  <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#4f46e5" />
-  <!-- Open Graph / SEO dasar -->
-  <meta property="og:title" content="Blog Kamu — Template Modern" />
-  <meta property="og:description" content="Template blog modern, ringan, responsif dengan dark mode, pencarian, kategori, dan tampilan artikel satu file." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="" />
-  <meta property="og:image" content="" />
-  <!-- Icons (opsional, ganti dengan file kamu) -->
-  <link rel="icon" sizes="32x32" href="favicon-32.png">
-  <link rel="icon" sizes="16x16" href="favicon-16.png">
-  <link rel="apple-touch-icon" href="favicon-180.png">
-  <style>
-    /* ========== Design Tokens (CSS Variables) ========== */
-    :root {
-      --bg: #0b1020;            /* dipakai utk gradient */
-      --surface: #ffffff;
-      --surface-2: #f4f6fb;
-      --text: #0f172a;
-      --muted: #475569;
-      --primary: #4f46e5;       /* indigo */
-      --primary-2: #7c3aed;     /* violet */
-      --ring: rgba(79,70,229,0.25);
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --shadow: 0 10px 25px rgba(2,6,23,.08);
-    }
-    html[data-theme="dark"] {
-      --surface: #0b1020;
-      --surface-2: #0f172a;
-      --text: #e5e7eb;
-      --muted: #94a3b8;
-      --card: #0f172a;
-      --border: #1f2937;
-      --shadow: 0 10px 25px rgba(0,0,0,.5);
-    }
-
-    /* ========== Reset Ringan ========== */
-    *,*::before,*::after{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji"; color:var(--text); background: var(--surface);}
-    img{max-width:100%; display:block}
-    a{color:inherit; text-decoration:none}
-    button,input,select{font:inherit}
-    :focus-visible{outline:2px solid var(--primary); outline-offset:2px}
-
-    /* ========== Utility kecil ========== */
-    .container{width:min(1100px, 92%); margin-inline:auto}
-    .btn{display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--border); background:var(--surface-2); padding:.6rem 1rem; border-radius:999px; box-shadow:var(--shadow); transition:.2s}
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:white; border-color:transparent}
-    .chip{display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .75rem; border:1px solid var(--border); border-radius:999px; background:var(--surface-2); font-size:.85rem; cursor:pointer; transition:.2s}
-    .chip.active{background:linear-gradient(135deg, rgba(79,70,229,.15), rgba(124,58,237,.15)); border-color:transparent}
-
-    /* ========== Navbar ========== */
-    .nav{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(10px); background:color-mix(in oklab, var(--surface), transparent 10%); border-bottom:1px solid var(--border)}
-    .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:.9rem 0}
-    .brand{display:flex; align-items:center; gap:.6rem; font-weight:700}
-    .brand .logo{width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--primary-2)); box-shadow:0 6px 20px var(--ring)}
-    .nav-actions{display:flex; align-items:center; gap:.5rem}
-    .search{flex:1; display:flex; align-items:center; gap:.5rem; padding:.55rem .9rem; border:1px solid var(--border); border-radius:999px; background:var(--surface-2)}
-    .search input{border:none; outline:none; flex:1; background:transparent; color:var(--text)}
-    .icon-btn{width:40px; height:40px; border-radius:999px; display:grid; place-items:center; border:1px solid var(--border); background:var(--surface-2); cursor:pointer}
-
-    /* Hamburger */
-    .hamb{display:none; width:42px; height:42px; border-radius:12px; border:1px solid var(--border); background:var(--surface-2); cursor:pointer; position:relative}
-    .hamb span{position:absolute; left:9px; right:9px; height:2px; background:var(--text); border-radius:2px; transition:transform .3s, top .3s, opacity .3s}
-    .hamb span:nth-child(1){top:13px}
-    .hamb span:nth-child(2){top:20px}
-    .hamb span:nth-child(3){top:27px}
-    .hamb.active span:nth-child(1){top:20px; transform:rotate(45deg)}
-    .hamb.active span:nth-child(2){opacity:0}
-    .hamb.active span:nth-child(3){top:20px; transform:rotate(-45deg)}
-
-    /* ========== Hero ========== */
-    .hero{position:relative; padding:clamp(2rem, 5vw, 4rem) 0; overflow:hidden}
-    .hero::before{content:""; position:absolute; inset:-20%; background:radial-gradient(40% 40% at 10% 10%, rgba(79,70,229,.25), transparent 60%), radial-gradient(35% 35% at 90% 10%, rgba(124,58,237,.25), transparent 60%), radial-gradient(45% 45% at 50% 90%, rgba(79,70,229,.15), transparent 60%); filter:blur(30px); pointer-events:none}
-    .hero-grid{display:grid; grid-template-columns:1.3fr .7fr; gap:2rem; align-items:center}
-    .headline{font-size:clamp(1.8rem, 3vw, 3rem); line-height:1.15; letter-spacing:-0.02em; font-weight:800}
-    .subtitle{color:var(--muted); margin-top:.8rem}
-    .hero-card{background:var(--card); border:1px solid var(--border); border-radius:20px; padding:1.25rem; box-shadow:var(--shadow)}
-
-    /* ========== List Posts ========== */
-    .toolbar{display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; justify-content:space-between; margin:1.5rem 0}
-    .chips{display:flex; gap:.5rem; flex-wrap:wrap}
-    .grid{display:grid; grid-template-columns: repeat(3, 1fr); gap:1.25rem}
-    .card{display:flex; flex-direction:column; border:1px solid var(--border); background:var(--card); border-radius:18px; overflow:hidden; box-shadow:var(--shadow); transition:transform .2s}
-    .card:hover{transform:translateY(-2px)}
-    .thumb{aspect-ratio:16/9; background:#0b1020; position:relative}
-    .thumb img{width:100%; height:100%; object-fit:cover}
-    .card-body{padding:1rem}
-    .meta{display:flex; align-items:center; gap:.6rem; color:var(--muted); font-size:.85rem}
-    .title{font-weight:700; font-size:1.05rem; margin: .5rem 0}
-    .desc{color:var(--muted)}
-
-    .pagination{display:flex; gap:.5rem; justify-content:center; margin:2rem 0}
-
-    /* ========== Post View (detail) ========== */
-    .post{max-width:820px; margin-inline:auto}
-    .post h1{font-size:clamp(1.6rem,3vw,2.4rem); line-height:1.2}
-    .post header{margin:1rem 0 1.25rem}
-    .post .cover{border-radius:16px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow)}
-    .prose{color:var(--text);}
-    .prose p{line-height:1.8; margin:1rem 0}
-    .prose h2{margin:2rem 0 1rem; font-size:1.35rem}
-    .prose pre{background: #0b1020; color:#e5e7eb; padding:1rem; border-radius:12px; overflow:auto}
-    .tag{display:inline-block; font-size:.8rem; padding:.2rem .6rem; border-radius:999px; background:var(--surface-2); border:1px solid var(--border)}
-
-    /* ========== Footer ========== */
-    footer{border-top:1px solid var(--border); margin-top:3rem; padding:2rem 0; color:var(--muted)}
-
-    /* ========== Responsive ========== */
-    @media (max-width: 920px){
-      .hero-grid{grid-template-columns:1fr}
-      .grid{grid-template-columns:repeat(2,1fr)}
-      .search{display:none}
-      .hamb{display:block}
-    }
-    @media (max-width: 560px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    /* ========== Animasi ringan ========== */
-    [data-animate]{opacity:0; transform:translateY(8px); transition:opacity .5s ease, transform .5s ease}
-    [data-animate].in{opacity:1; transform:none}
-
-    /* ========== Drawer Menu ========== */
-    .drawer{position:fixed; inset:0; z-index:60; display:none}
-    .drawer.active{display:block}
-    .drawer .backdrop{position:absolute; inset:0; background:rgba(2,6,23,.45)}
-    .drawer .panel{position:absolute; top:0; bottom:0; left:0; width:min(85vw, 320px); background:var(--card); border-right:1px solid var(--border); padding:1rem}
-    .drawer .panel a{display:block; padding:.7rem .6rem; border-radius:10px}
-    .drawer .panel a:hover{background:var(--surface-2)}
-  </style>
-</head>
-<body>
-  <!-- ================= NAVBAR ================= -->
-  <nav class="nav">
-    <div class="container nav-inner">
-      <button class="hamb" id="hamb" aria-label="Buka menu">
-        <span></span><span></span><span></span>
-      </button>
-      <a class="brand" href="#" aria-label="Halaman utama">
-        <span class="logo" aria-hidden="true"></span>
-        <span>BlogKamu</span>
-      </a>
-      <div class="nav-actions" role="toolbar" aria-label="Aksi navbar">
-        <label class="search" aria-label="Cari artikel">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/></svg>
-          <input id="search" type="search" placeholder="Cari artikel... (Ctrl+/)" />
-        </label>
-        <button id="themeToggle" class="icon-btn" aria-label="Ganti tema">
-          <svg id="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <svg id="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:none" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portofolio MZ Fathan</title>
+    <link rel="icon" sizes="32x32" type="image/png" href="video/images/port.png">
+    <link rel="icon" sizes="192x192" href="video/images/port.png">
+    <link rel="apple-touch-icon" href="video/images/port.png">
+    <link rel="icon" sizes="32x32" href="video/images/port.png">
+<link rel="icon" sizes="16x16" href="video/images/port.png">
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+    <!-- FontAwesome untuk icon sosial -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <a href="#" class="logo">MZ Fathan</a>
+        <nav class="nav" id="nav-menu">
+          <ul>
+            <li><a href="#home">Beranda</a></li>
+            <li><a href="#about">Tentang Saya</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#clients">Clients</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <button id="nav-toggle" aria-label="Toggle Menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
         </button>
       </div>
-    </div>
-  </nav>
-
-  <!-- Drawer mobile -->
-  <div class="drawer" id="drawer" aria-hidden="true">
-    <div class="backdrop" data-close></div>
-    <aside class="panel" role="dialog" aria-label="Menu">
-      <a href="#" data-close>Beranda</a>
-      <a href="#kategori/Desain" data-close>Desain</a>
-      <a href="#kategori/Programming" data-close>Programming</a>
-      <a href="#kategori/Tips" data-close>Tips</a>
-      <hr style="border-color:var(--border); margin:1rem 0">
-      <button class="btn" id="mobileTheme" aria-label="Ganti tema">Ganti Tema</button>
-    </aside>
-  </div>
-
-  <!-- ================= HERO ================= -->
-  <header class="hero">
-    <div class="container hero-grid">
-      <div>
-        <h1 class="headline" data-animate>Berbagi ide, catatan, dan eksperimen—semua di satu tempat.</h1>
-        <p class="subtitle" data-animate>Template blog ini sudah siap pakai: dark mode, pencarian real‑time, filter kategori, dan tampilan artikel tanpa pindah halaman.</p>
-        <div style="margin-top:1rem" data-animate>
-          <a href="#" class="btn btn-primary">Mulai Baca</a>
-          <a href="#tentang" class="btn">Tentang</a>
-        </div>
-      </div>
-      <div class="hero-card" data-animate>
-        <strong>Quick Setup</strong>
-        <ol style="margin:.75rem 0 0 1.1rem; color:var(--muted)">
-          <li>Ganti data postingan di variabel <code>POSTS</code>.</li>
-          <li>Sesuaikan warna & judul di bagian atas file.</li>
-          <li>Upload ke hosting / GitHub Pages, beres!</li>
-        </ol>
-      </div>
-    </div>
-  </header>
-
-  <!-- ================= HOME (List Posts) ================= -->
-  <main class="container" id="homeView" hidden>
-    <div class="toolbar">
-      <div class="chips" id="chips"></div>
-      <div>
-        <button class="btn" id="clearFilters">Reset</button>
-      </div>
-    </div>
-
-    <section class="grid" id="grid" aria-live="polite"></section>
-    <nav class="pagination" id="pagination"></nav>
-  </main>
-
-  <!-- ================= POST (Detail) ================= -->
-  <article class="container post" id="postView" hidden>
-    <a href="#" class="btn" style="margin:1rem 0 .5rem">← Kembali</a>
-    <header>
-      <h1 id="postTitle"></h1>
-      <div class="meta" id="postMeta"></div>
     </header>
-    <div class="cover"><img id="postCover" alt=""></div>
-    <div class="prose" id="postBody"></div>
-    <div style="margin-top:1rem; display:flex; gap:.5rem; flex-wrap:wrap" id="postTags"></div>
-    <section style="margin-top:2rem">
-      <h2>Komentar</h2>
-      <p style="color:var(--muted)">Integrasikan Disqus/Utterances/Telegram sesuai kebutuhanmu.</p>
-    </section>
-  </article>
 
-  <footer>
-    <div class="container" style="display:flex; gap:1rem; justify-content:space-between; align-items:center; flex-wrap:wrap">
-      <small>© <span id="year"></span> BlogKamu. Dibuat dengan ♥</small>
-      <div style="display:flex; gap:.5rem">
-        <a class="chip" href="#tentang">Tentang</a>
-        <a class="chip" href="#kontak">Kontak</a>
-        <a class="chip" href="#rss">RSS</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // ==================== Data Dummy Post ====================
-    const POSTS = [
-      {
-        id: 'introduksi-template-blog',
-        title: 'Introduksi Template Blog: Fitur & Cara Pakai',
-        date: '2025-10-10',
-        author: 'MZ Fathan',
-        category: 'Tips',
-        tags: ['Template', 'Panduan'],
-        cover: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1280&auto=format&fit=crop',
-        excerpt: 'Kenalan dengan template blog modern serba cepat: dark mode, search real-time, kategori, dan SPA detail post.',
-        body: `
-          <p>Template ini dirancang untuk <strong>ringan</strong>, <strong>aksesibel</strong>, dan <strong>mudah diubah</strong>. Semuanya berada di satu file HTML, cocok untuk deploy cepat.</p>
-          <h2>Fitur kunci</h2>
-          <ul>
-            <li>Dark/Light mode dengan penyimpanan preferensi.</li>
-            <li>Pencarian judul & ringkasan secara real-time.</li>
-            <li>Filter kategori + tag, serta pagination.</li>
-            <li>Detail posting via <code>#post/&lt;id&gt;</code> tanpa reload.</li>
-          </ul>
-          <p>Tinggal ganti data di variabel <code>POSTS</code> untuk mulai nge‑blog.</p>
-        `,
-      },
-      {
-        id: 'desain-sistem-token',
-        title: 'Desain Sistem Token Warna untuk Dark Mode',
-        date: '2025-09-18',
-        author: 'Irpan',
-        category: 'Desain',
-        tags: ['UI', 'Dark Mode'],
-        cover: 'https://images.unsplash.com/photo-1526481280698-8fcc13fd1b4d?q=80&w=1280&auto=format&fit=crop',
-        excerpt: 'Belajar menyusun design tokens agar tampilan konsisten di light & dark mode.',
-        body: `
-          <p>Dengan CSS variables, kamu bisa membuat tema yang konsisten dan mudah diatur.</p>
-          <pre><code>:root{ --surface:#fff; --text:#0f172a }\nhtml[data-theme="dark"]{ --surface:#0b1020; --text:#e5e7eb }</code></pre>
-          <p>Gunakan class/atribut pada <code>&lt;html&gt;</code> untuk mengganti tema.</p>
-        `,
-      },
-      {
-        id: 'tips-performa-web',
-        title: 'Tips Performa Web: Kecilkan, Tunda, Cache!',
-        date: '2025-08-05',
-        author: 'MZ Fathan',
-        category: 'Programming',
-        tags: ['Performance', 'Best Practice'],
-        cover: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1280&auto=format&fit=crop',
-        excerpt: 'Beberapa prinsip sederhana yang meningkatkan kecepatan loading.',
-        body: `
-          <p>Mulai dari gambar terkompres, lazy loading, dan minimalkan blocking scripts.</p>
-          <p>Implementasikan strategi caching agar kunjungan berikutnya makin cepat.</p>
-        `,
-      },
-      // Tambahkan artikel lain sesuka kamu
-    ];
-
-    // ==================== State & Helpers ====================
-    const state = {
-      q: '',
-      category: 'Semua',
-      page: 1,
-      perPage: 6,
-    };
-
-    const el = (sel) => document.querySelector(sel);
-    const els = (sel) => Array.from(document.querySelectorAll(sel));
-
-    const formatDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', { year:'numeric', month:'long', day:'numeric'});
-
-    // ==================== Render Chips (Kategori) ====================
-    const categories = ['Semua', ...Array.from(new Set(POSTS.map(p=>p.category)))];
-    function renderChips(){
-      const wrap = el('#chips');
-      wrap.innerHTML = '';
-      categories.forEach(cat =>{
-        const a = document.createElement('button');
-        a.className = 'chip' + (state.category===cat ? ' active' : '');
-        a.textContent = cat;
-        a.setAttribute('aria-pressed', state.category===cat);
-        a.addEventListener('click', ()=>{ state.category = cat; state.page=1; routeTo('#'); render(); });
-        wrap.appendChild(a);
-      });
-    }
-
-    // ==================== Filter & Paginate ====================
-    function getFiltered(){
-      const q = state.q.trim().toLowerCase();
-      let items = POSTS.slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
-      if (state.category !== 'Semua') items = items.filter(p=>p.category===state.category);
-      if (q) items = items.filter(p => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q));
-      return items;
-    }
-
-    function paginate(items){
-      const total = Math.ceil(items.length / state.perPage) || 1;
-      const start = (state.page-1)*state.perPage;
-      return { items: items.slice(start, start+state.perPage), total };
-    }
-
-    // ==================== Render Grid ====================
-    function renderGrid(){
-      const grid = el('#grid');
-      const { items, total } = paginate(getFiltered());
-      grid.innerHTML = '';
-      items.forEach(p=>{
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.innerHTML = `
-          <a href="#post/${p.id}" class="thumb"><img loading="lazy" src="${p.cover}" alt="${p.title}"></a>
-          <div class="card-body">
-            <div class="meta">
-              <span>${p.category}</span> · <time datetime="${p.date}">${formatDate(p.date)}</time>
-            </div>
-            <a href="#post/${p.id}" class="title">${p.title}</a>
-            <p class="desc">${p.excerpt}</p>
+    <main>
+      <!-- Home Section -->
+      <section class="home" id="home">
+        <div class="container home-content">
+          <div class="home-text">
+            <p class="intro">Halo Semua 👋, saya</p>
+            <h1 class="name">Muhamad Zahril Fathan</h1>
+            <p class="subtitle">Nusa Putra University | Mahasiswa</p>
+            <p class="desc">
+              "jangan Bilang Tidak Mungkin kepadaku Sebelum kamu
+              <strong>Mati</strong> dalam Mencobanya.
+            </p>
+            <a href="#contact" class="btn btn-primary">Hubungi Saya</a>
           </div>
-        `;
-        grid.appendChild(card);
-      });
-      renderPagination(total);
-    }
+          <div class="home-img">
+            <div class="img-circle"></div>
+            <img
+              src="WhatsApp_Image_2025-11-03_at_18.16.43-removebg-preview.png"
+              alt="Foto MZF"
+            />
+          </div>
+        </div>
+      </section>
 
-    function renderPagination(total){
-      const nav = el('#pagination');
-      nav.innerHTML = '';
-      const makeBtn = (label, page, disabled=false)=>{
-        const b = document.createElement('button');
-        b.className = 'btn';
-        b.textContent = label;
-        b.disabled = disabled;
-        b.addEventListener('click', ()=>{ state.page = page; window.scrollTo({top:0, behavior:'smooth'}); renderGrid(); });
-        return b;
-      }
-      nav.appendChild(makeBtn('«', 1, state.page===1));
-      nav.appendChild(makeBtn('‹', Math.max(1,state.page-1), state.page===1));
-      const info = document.createElement('span'); info.style.padding = '.6rem 1rem'; info.textContent = `Hal ${state.page} dari ${total}`;
-      nav.appendChild(info);
-      nav.appendChild(makeBtn('›', Math.min(total, state.page+1), state.page===total));
-      nav.appendChild(makeBtn('»', total, state.page===total));
-    }
+      <!-- About Section -->
+      <section class="about" id="about">
+        <div class="container about-content">
+          <div class="about-text">
+            <h2>Tentang Saya</h2>
+            <h3>Yuk, belajar web programming!</h3>
+            <p>
+              Halo! Saya adalah seorang penggemar teknologi yang senang
+              membangun sesuatu dari baris-baris kode. Saya percaya bahwa setiap
+              website bukan hanya soal tampilan, tapi juga tentang pengalaman
+              dan fungsi yang bermanfaat. Saya suka bereksperimen dengan HTML,
+              CSS, dan JavaScript untuk membuat web yang interaktif dan
+              responsif. Yuk, belajar bareng dan berkembang bersama di dunia web
+              programming!
+            </p>
+          </div>
+          <div class="about-friends">
+            <h3>Mari berteman</h3>
+            <p>
+              Saya percaya, belajar akan lebih seru kalau dilakukan bersama.
+              Jadi, kalau kamu punya minat di dunia web development, desain,
+              atau teknologi. Ayo, kenalan! Kita bisa saling berbagi pengalaman,
+              berdiskusi, atau mungkin berkolaborasi di proyek menarik. Jangan
+              sungkan buat menyapa ya!
+            </p>
+            <div class="social-links">
+              <a href="#" aria-label="YouTube"
+                ><i class="fab fa-youtube"></i
+              ></a>
+              <a href="#" aria-label="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+              <a href="#" aria-label="LinkedIn"
+                ><i class="fab fa-linkedin"></i
+              ></a>
+              <a href="#" aria-label="Discord"
+                ><i class="fab fa-discord"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    // ==================== Post Detail ====================
-    function renderPost(id){
-      const p = POSTS.find(x=>x.id===id);
-      if(!p){ routeTo('#'); return }
-      el('#postTitle').textContent = p.title;
-      el('#postMeta').innerHTML = `${p.author} · <time datetime="${p.date}">${formatDate(p.date)}</time>`;
-      el('#postCover').src = p.cover; el('#postCover').alt = p.title;
-      el('#postBody').innerHTML = p.body;
-      const tags = el('#postTags'); tags.innerHTML = '';
-      p.tags?.forEach(t=>{ const s = document.createElement('span'); s.className='tag'; s.textContent = `#${t}`; tags.appendChild(s); });
-    }
+      <!-- Portfolio Section -->
+      <section class="portfolio" id="portfolio">
+        <div class="container">
+          <h2 class="section-title">Portfolio</h2>
+          <p class="section-subtitle">
+            Beberapa project yang pernah saya kerjakan
+          </p>
+          <div class="portfolio-grid">
+            <article class="portfolio-card">
+              <img
+                src="WhatsApp Image 2025-01-26 at 15.41.52.jpeg"
+                alt="Website Company Profile"
+                class="portfolio-image"
+              />
+              <div class="portfolio-content">
+                <h3 class="portfolio-title">Website Kenangan Kelas</h3>
+                <p class="portfolio-desc">
+                  Proyek pribadi yang saya buat untuk mengabadikan momen-momen
+                  seru semasa sekolah. Website ini menampilkan galeri foto dan
+                  cerita teman-teman, dibuat dengan HTML, CSS, dan JavaScript
+                  agar tampilannya tetap responsif dan menarik.
+                </p>
+                <a
+                  href="https://xiitkj1.github.io/"
+                  class="btn btn-outline"
+                  aria-label="Selengkapnya Project 1"
+                  >Selengkapnya</a
+                >
+              </div>
+            </article>
 
-    // ==================== Router Sederhana ====================
-    function routeTo(hash){ window.location.hash = hash; }
-    function router(){
-      const hash = decodeURIComponent(window.location.hash || '#');
-      const [path, param] = hash.replace('#','').split('/');
-      if(path==='post' && param){
-        el('#homeView').hidden = true;
-        el('#postView').hidden = false;
-        renderPost(param);
-      } else if (path==='kategori' && param){
-        state.category = param; state.page = 1;
-        el('#postView').hidden = true; el('#homeView').hidden = false; render();
-      } else {
-        el('#postView').hidden = true; el('#homeView').hidden = false; render();
-      }
-    }
+            <article class="portfolio-card">
+              <img src="video/images/logo.png" alt="video tugas" class="portfolio-image" />
+              <div class="portfolio-content">
+                <h3 class="portfolio-title">Video Tugas</h3>
+                <p class="portfolio-desc">
+                  Kumpulan video tugas kampus yang menampilkan hasil proyek,
+                  presentasi, dan eksperimen selama masa perkuliahan.
+                </p>
 
-    // ==================== Theme Toggle ====================
-    function applyTheme(t){
-      document.documentElement.setAttribute('data-theme', t);
-      localStorage.setItem('theme', t);
-      const isDark = t==='dark';
-      el('#sun').style.display = isDark ? 'none' : '';
-      el('#moon').style.display = isDark ? '' : 'none';
-    }
+                <a
+                  href="video/index.html"
+                  class="btn btn-outline"
+                  aria-label="Selengkapnya Project 2"
+                  >Selengkapnya</a
+                >
+              </div>
+            </article>
 
-    // ==================== Animasi Masuk ====================
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
-    }, { threshold: 0.05 });
+            <article class="portfolio-card" id="blog">
+              <img
+                src="blog-372771_1280.jpg"
+                alt="Blog Pribadi"
+                class="portfolio-image"
+              />
+              <div class="portfolio-content">
+                <h3 class="portfolio-title">Blog Pribadi</h3>
+                <p class="portfolio-desc">
+                  Website blog pribadi yang dirancang untuk berbagi tulisan,
+                  pengalaman, dan ide secara mudah. Dibangun dengan tampilan
+                  sederhana, responsif, dan fokus pada kenyamanan pembaca.
+                </p>
 
-    // ==================== Init ====================
-    function init(){
-      // Tahun
-      el('#year').textContent = new Date().getFullYear();
+                <a
+                  href="blog/index.html"
+                  class="btn btn-outline"
+                  aria-label="Selengkapnya Project 3"
+                  >Selengkapnya</a
+                >
+              </div>
+            </article>
+            <!--  
+            <article class="portfolio-card">
+              <img
+                src="https://via.placeholder.com/360x220?text=Project+4"
+                alt="Landing Page Event"
+                class="portfolio-image"
+              />
+              <div class="portfolio-content">
+                <h3 class="portfolio-title">Landing Page Event</h3>
+                <p class="portfolio-desc">
+                  Landing page kreatif untuk promosi event dengan animasi
+                  menarik.
+                </p>
+                <a
+                  href="#"
+                  class="btn btn-outline"
+                  aria-label="Selengkapnya Project 4"
+                  >Selengkapnya</a
+                >
+              </div>
+            </article>
+-->
+          </div>
+        </div>
+      </section>
 
-      // Theme
-      applyTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'));
-      el('#themeToggle').addEventListener('click', ()=> applyTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark'));
-      el('#mobileTheme').addEventListener('click', ()=> applyTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark'));
+      <!-- Contact Section -->
+      <article class="contact" id="contact">
+        <div class="container">
+          <h2 class="section-title">Kontak</h2>
+          <p class="section-subtitle">
+            Silakan hubungi saya melalui email berikut:
+          </p>
+          <div class="contact-content">
+            <a
+              href="mailto:muhamadzahrilfathan@gmail.com"
+              class="btn btn-primary"
+              aria-label="Email Saya"
+              >✉️ Email Saya</a
+            >
+          </div>
+        </div>
+      </article>
 
-      // Search
-      const search = el('#search');
-      const updateQ = () => { state.q = search.value; state.page = 1; renderGrid(); };
-      search.addEventListener('input', updateQ);
-      window.addEventListener('keydown', (e)=>{ if((e.ctrlKey||e.metaKey) && e.key==='/'){ e.preventDefault(); search.focus(); }});
+      <!-- Clients, Blog, Contact Sections bisa ditambahkan disini sesuai kebutuhan -->
+    </main>
 
-      // Chips
-      renderChips();
+    <footer class="footer" id="contact">
+      <div class="container">
+        <p>© 2025 Muhammad Zahril Fathan. All rights reserved.</p>
+      </div>
+    </footer>
 
-      // Render pertama
-      renderGrid();
-
-      // Animasi
-      els('[data-animate]').forEach(n=> io.observe(n));
-
-      // Router
-      window.addEventListener('hashchange', router);
-      router();
-
-      // Hamburger + Drawer
-      const hamb = el('#hamb');
-      const drawer = el('#drawer');
-      const openDrawer = ()=>{ drawer.classList.add('active'); hamb.classList.add('active'); };
-      const closeDrawer = ()=>{ drawer.classList.remove('active'); hamb.classList.remove('active'); };
-      hamb.addEventListener('click', ()=> drawer.classList.contains('active') ? closeDrawer() : openDrawer());
-      drawer.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) closeDrawer(); });
-      document.addEventListener('click', (e)=>{
-        // klik di luar hamb saat terbuka → tutup
-        if(drawer.classList.contains('active')){
-          const panel = drawer.querySelector('.panel');
-          if(!panel.contains(e.target) && !hamb.contains(e.target)) closeDrawer();
-        }
-      });
-
-      // Reset filter
-      el('#clearFilters').addEventListener('click', ()=>{ state.q=''; el('#search').value=''; state.category='Semua'; state.page=1; render(); });
-    }
-
-    function render(){ renderChips(); renderGrid(); }
-
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
+    <button id="scrollTopBtn" title="Scroll ke atas">▲</button>
+  </body>
 </html>
