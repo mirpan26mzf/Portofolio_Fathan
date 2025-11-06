@@ -247,39 +247,57 @@ body.dark .search-box input {
   }
 }
 
-/* === Popup Preview seperti YouTube === */
-.video-preview {
+/* ======== Popup Player ======== */
+.video-popup {
   position: fixed;
-  width: 320px;
-  height: 180px;
-  background: #000;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fadeIn 0.4s forwards;
-  z-index: 999;
-  pointer-events: none;
-}
-
-.video-preview iframe {
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  border: none;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 100;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.video-popup.active {
+  visibility: visible;
+  opacity: 1;
 }
 
-.fade-out {
-  animation: fadeOut 0.3s forwards;
+.video-popup iframe {
+  width: 50%;
+  max-width: 900px;
+  height: 500px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-@keyframes fadeOut {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(10px); }
+.close-popup {
+  position: absolute;
+  top: 40px;
+  right: 60px;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
 
+.close-popup:hover {
+  transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+  .video-popup iframe {
+    width: 95%;
+    height: 240px;
+  }
+  .close-popup {
+    top: 20px;
+    right: 20px;
+  }
+}
