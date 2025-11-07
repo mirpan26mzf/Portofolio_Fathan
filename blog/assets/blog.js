@@ -38,7 +38,7 @@ const POSTS = [
       "ANALISIS PERANCANGAN SERVER VOIP DENGAN OPEN SOURCE ASTERISK DAN VPN",
     date: "2024-09-28",
     author: "Fathan",
-    category: "Cerita",
+    category: "Instalasi VoIP",
     tags: ["Voip", "PERANCANGANSERVERVOIP"],
     cover:
       "images1/voip.png",
@@ -171,7 +171,7 @@ const POSTS = [
     title: "WEBSITE",
     date: "2024-11-13",
     author: "Fathan",
-    category: "Cerita",
+    category: "Website",
     tags: ["WEB", "WEBSITE", "DINAMIS", "STATIS"],
     cover:
       "images1/web.PNG",
